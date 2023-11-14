@@ -1,5 +1,5 @@
 # CUDA_VISIBLE_DEVICES=0 python test_fatezero.py --config config/teaser/jeep_posche.yaml
-pretrained_model_path: "./checkpoints/stable-diffusion-v1-4"
+pretrained_model_path: "./ckpt/stable-diffusion-v1-4"
 
 dataset_config:
   path: "data/highway.mp4"
