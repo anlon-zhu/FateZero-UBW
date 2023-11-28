@@ -52,8 +52,8 @@ mixed_precision: "fp16"
 gradient_checkpointing: True
 
 train_steps: 1000
-validation_steps: 50
-checkpointing_steps: 50
+validation_steps: 250
+checkpointing_steps: 250
 seed: 74831
 learning_rate: 1e-5
 # prior_preservation: 1.0
