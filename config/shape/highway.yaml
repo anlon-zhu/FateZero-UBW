@@ -43,9 +43,9 @@ editing_config:
 
       # Amplify the target-words cross attention, larger value, more close to target
       # Usefull in style editing
-      # eq_params: # equilizer_params
-      #   words: ["watercolor", "painting"]
-      #   values: [10, 10] # RENAME ca_amp
+      eq_params: # equilizer_params
+        words: ["watercolor", "painting"]
+        values: [10, 10] # RENAME ca_amp
 
       # Target structure-divergence hyperparames
       # If you change the shape of object better to use all three line, otherwise, no need.
