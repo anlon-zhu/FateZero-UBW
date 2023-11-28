@@ -230,7 +230,7 @@ def convert_mp4_to_folder(mp4_path, output_folder):
     os.makedirs(output_folder, exist_ok=True)
 
     cap = cv2.VideoCapture(mp4_path)
-    frame_count = 8
+    frame_count = 24
 
     for frame_index in range(frame_count):
         ret, frame = cap.read()
