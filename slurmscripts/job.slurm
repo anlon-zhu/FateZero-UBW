@@ -15,4 +15,4 @@ module purge
 module load anaconda3/2023.3
 conda activate avtav
 
-accelerate launch train_tuneavideo.py --config="configs/man-surfing.yaml"
+accelerate launch train_tuneavideo.py --config="config/tune/highway.yaml"
