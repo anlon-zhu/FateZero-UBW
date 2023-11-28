@@ -72,48 +72,47 @@ editing_config:
       blend_self_attention: True
       blend_th: [0.3, 0.3]
     2:
-          is_replace_controller: False
-          cross_replace_steps: 
-              default_: 0.3
-          self_replace_steps: 0.5
-          
-          # eq_params: 
-          #     words: ["duck"]
-          #     values: [5] # amplify attention to the word "tiger" by *2 
-          use_inversion_attention: True
-          blend_words: [["van"], ["bus"]]
-          blend_self_attention:  True
-          # blend_latents: False   # performance not so good in our case, need debug            
-          blend_th: [0.2, 0.2]
-      3:
-            is_replace_controller: False
-            cross_replace_steps: 
-                default_: 0.3
-            self_replace_steps: 0.5
-            
-            # eq_params: 
-            #     words: ["duck"]
-            #     values: [5] # amplify attention to the word "tiger" by *2 
-            use_inversion_attention: True
-            blend_words: [["white", van"], ["blue", "Ford GT"]] 
-            blend_self_attention:  True
-            # blend_latents: False   # performance not so good in our case, need debug            
-            blend_th: [0.2, 0.2]
-        4:
-            is_replace_controller: False
-            cross_replace_steps: 
-                default_: 0.3
-            self_replace_steps: 0.5
-            
-            # eq_params: 
-            #     words: ["duck"]
-            #     values: [5] # amplify attention to the word "tiger" by *2 
-            use_inversion_attention: True
-            blend_words: [['van',], ["BMW",]] 
-            blend_self_attention:  True
-            # blend_latents: False   # performance not so good in our case, need debug            
-            blend_th: [0.2, 0.2]
+      is_replace_controller: False
+      cross_replace_steps:
+        default_: 0.3
+      self_replace_steps: 0.5
 
+      # eq_params:
+      #     words: ["duck"]
+      #     values: [5] # amplify attention to the word "tiger" by *2
+      use_inversion_attention: True
+      blend_words: [["van"], ["bus"]]
+      blend_self_attention: True
+      # blend_latents: False   # performance not so good in our case, need debug
+      blend_th: [0.2, 0.2]
+    3:
+      is_replace_controller: False
+      cross_replace_steps:
+        default_: 0.3
+      self_replace_steps: 0.5
+
+      # eq_params:
+      #     words: ["duck"]
+      #     values: [5] # amplify attention to the word "tiger" by *2
+      use_inversion_attention: True
+      blend_words: [["white", van"], ["blue", "Ford GT"]]
+      blend_self_attention: True
+      # blend_latents: False   # performance not so good in our case, need debug
+      blend_th: [0.2, 0.2]
+      4:
+        is_replace_controller: False
+        cross_replace_steps:
+          default_: 0.3
+        self_replace_steps: 0.5
+
+        # eq_params:
+        #     words: ["duck"]
+        #     values: [5] # amplify attention to the word "tiger" by *2
+        use_inversion_attention: True
+        blend_words: [["van"], ["BMW"]]
+        blend_self_attention: True
+        # blend_latents: False   # performance not so good in our case, need debug
+        blend_th: [0.2, 0.2]
 
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [0]
