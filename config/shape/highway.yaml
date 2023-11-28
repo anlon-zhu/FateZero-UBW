@@ -1,4 +1,4 @@
-pretrained_model_path: "./ckpt/highway_500"
+pretrained_model_path: "./ckpt/highway_100"
 
 dataset_config:
   path: "data/highway"
