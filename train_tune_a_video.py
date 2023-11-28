@@ -1,4 +1,5 @@
-import os,copy
+import os
+import copy
 import inspect
 from typing import Optional, Dict
 import click
@@ -35,15 +36,17 @@ from video_diffusion.pipelines.validation_loop import SampleLogger
 
 def collate_fn(examples):
     batch = {
-        "prompt_ids": torch.cat([example["prompt_ids"] for example in examples], dim=0),
-        "images": torch.stack([example["images"] for example in examples]),
-        
-    }
+        "prompt_ids": torch.cat(
+            [example["prompt_ids"] for example in examples],
+            dim=0),
+        "images": torch.stack(
+            [example["images"] for example in examples]), }
     if "class_images" in examples[0]:
-        batch["class_prompt_ids"] = torch.cat([example["class_prompt_ids"] for example in examples], dim=0)
-        batch["class_images"] =  torch.stack([example["class_images"] for example in examples])
+        batch["class_prompt_ids"] = torch.cat(
+            [example["class_prompt_ids"] for example in examples], dim=0)
+        batch["class_images"] = torch.stack(
+            [example["class_images"] for example in examples])
     return batch
-
 
 
 def train(
@@ -63,7 +66,8 @@ def train(
     train_batch_size: int = 1,
     learning_rate: float = 3e-5,
     scale_lr: bool = False,
-    lr_scheduler: str = "constant",  # ["linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"]
+    # ["linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"]
+    lr_scheduler: str = "constant",
     lr_warmup_steps: int = 0,
     use_8bit_adam: bool = True,
     adam_beta1: float = 0.9,
@@ -74,15 +78,18 @@ def train(
     gradient_checkpointing: bool = False,
     train_temporal_conv: bool = False,
     checkpointing_steps: int = 1000,
-    model_config: dict={},
+    model_config: dict = {},
 ):
     args = get_function_args()
     train_dataset_config = copy.deepcopy(dataset_config)
     time_string = get_time_string()
     if logdir is None:
-        logdir = config.replace('config', 'result').replace('.yml', '').replace('.yaml', '')
+        logdir = config.replace(
+            'config', 'result').replace(
+            '.yml', '').replace(
+            '.yaml', '')
     logdir += f"_{time_string}"
-    
+
     accelerator = Accelerator(
         gradient_accumulation_steps=gradient_accumulation_steps,
         mixed_precision=mixed_precision,
@@ -113,13 +120,12 @@ def train(
     )
 
     unet = UNetPseudo3DConditionModel.from_2d_model(
-        os.path.join(pretrained_model_path, "unet"), model_config=model_config
-    )
+        os.path.join(pretrained_model_path, "unet"),
+        model_config=model_config)
 
-    
     if 'target' not in test_pipeline_config:
         test_pipeline_config['target'] = 'video_diffusion.pipelines.stable_diffusion.SpatioTemporalStableDiffusionPipeline'
-    
+
     pipeline = instantiate_from_config(
         test_pipeline_config,
         vae=vae,
@@ -131,9 +137,9 @@ def train(
             subfolder="scheduler",
         ),
     )
-    pipeline.scheduler.set_timesteps(editing_config['num_inference_steps'])
+    pipeline.scheduler.set_timesteps(
+        editing_config['num_inference_steps'])
     pipeline.set_progress_bar_config(disable=True)
-
 
     if is_xformers_available() and enable_xformers:
         try:
@@ -142,8 +148,7 @@ def train(
         except Exception as e:
             logger.warning(
                 "Could not enable memory efficient attention. Make sure xformers is installed"
-                f" correctly and a GPU is available: {e}"
-            )
+                f" correctly and a GPU is available: {e}")
 
     vae.requires_grad_(False)
     unet.requires_grad_(False)
@@ -157,16 +162,15 @@ def train(
         if name.endswith(trainable_modules):
             for params in module.parameters():
                 params.requires_grad = True
-                
 
     if gradient_checkpointing:
-        print('enable gradient checkpointing in the training and testing')    
+        print('enable gradient checkpointing in the training and testing')
         unet.enable_gradient_checkpointing()
 
     if scale_lr:
         learning_rate = (
-            learning_rate * gradient_accumulation_steps * train_batch_size * accelerator.num_processes
-        )
+            learning_rate * gradient_accumulation_steps *
+            train_batch_size * accelerator.num_processes)
 
     # Use 8-bit Adam for lower memory usage or to fine-tune the model in 16GB GPUs
     if use_8bit_adam:
@@ -183,19 +187,20 @@ def train(
 
     params_to_optimize = unet.parameters()
     num_trainable_modules = 0
-    num_trainable_params = 0 
+    num_trainable_params = 0
     num_unet_params = 0
     for params in params_to_optimize:
         num_unet_params += params.numel()
         if params.requires_grad == True:
-            num_trainable_modules +=1
+            num_trainable_modules += 1
             num_trainable_params += params.numel()
-    
-    logger.info(f"Num of trainable modules: {num_trainable_modules}")        
-    logger.info(f"Num of trainable params: {num_trainable_params/(1024*1024):.2f} M")
-    logger.info(f"Num of unet params: {num_unet_params/(1024*1024):.2f} M ")
-    
-    
+
+    logger.info(f"Num of trainable modules: {num_trainable_modules}")
+    logger.info(
+        f"Num of trainable params: {num_trainable_params/(1024*1024):.2f} M")
+    logger.info(
+        f"Num of unet params: {num_unet_params/(1024*1024):.2f} M ")
+
     params_to_optimize = unet.parameters()
     optimizer = optimizer_class(
         params_to_optimize,
@@ -205,7 +210,6 @@ def train(
         eps=adam_epsilon,
     )
 
-
     prompt_ids = tokenizer(
         train_dataset_config["prompt"],
         truncation=True,
@@ -213,7 +217,7 @@ def train(
         max_length=tokenizer.model_max_length,
         return_tensors="pt",
     ).input_ids
-    
+
     if 'class_data_root' in train_dataset_config:
         if 'class_data_prompt' not in train_dataset_config:
             train_dataset_config['class_data_prompt'] = train_dataset_config['prompt']
@@ -226,7 +230,9 @@ def train(
         ).input_ids
     else:
         class_prompt_ids = None
-    train_dataset = ImageSequenceDataset(**train_dataset_config, prompt_ids=prompt_ids, class_prompt_ids=class_prompt_ids)
+    train_dataset = ImageSequenceDataset(
+        **train_dataset_config, prompt_ids=prompt_ids,
+        class_prompt_ids=class_prompt_ids)
 
     train_dataloader = torch.utils.data.DataLoader(
         train_dataset,
@@ -237,9 +243,14 @@ def train(
     )
 
     train_sample_save_path = os.path.join(logdir, "train_samples.gif")
-    log_train_samples(save_path=train_sample_save_path, train_dataloader=train_dataloader)
+    log_train_samples(
+        save_path=train_sample_save_path,
+        train_dataloader=train_dataloader)
     if 'class_data_root' in train_dataset_config:
-        log_train_reg_samples(save_path=train_sample_save_path.replace('train_samples', 'class_data_samples'), train_dataloader=train_dataloader)
+        log_train_reg_samples(
+            save_path=train_sample_save_path.replace(
+                'train_samples', 'class_data_samples'),
+            train_dataloader=train_dataloader)
 
     # Prepare learning rate scheduler in accelerate config
     lr_scheduler = get_scheduler(
@@ -250,8 +261,7 @@ def train(
     )
 
     unet, optimizer, train_dataloader, lr_scheduler = accelerator.prepare(
-        unet, optimizer, train_dataloader, lr_scheduler
-    )
+        unet, optimizer, train_dataloader, lr_scheduler)
     accelerator.register_for_checkpointing(lr_scheduler)
 
     weight_dtype = torch.float32
@@ -267,12 +277,11 @@ def train(
     vae.to(accelerator.device, dtype=weight_dtype)
     text_encoder.to(accelerator.device, dtype=weight_dtype)
 
-
     # We need to initialize the trackers we use, and also store our configuration.
     # The trackers initializes automatically on the main process.
     if accelerator.is_main_process:
         accelerator.init_trackers("video")  # , config=vars(args))
-    
+
     # Start of config trainer
     trainer = instantiate_from_config(
         trainer_pipeline_config,
@@ -280,10 +289,10 @@ def train(
         text_encoder=text_encoder,
         tokenizer=tokenizer,
         unet=unet,
-        scheduler= DDPMScheduler.from_pretrained(
+        scheduler=DDPMScheduler.from_pretrained(
             pretrained_model_path,
             subfolder="scheduler",
-            ),
+        ),
         # training hyperparams
         weight_dtype=weight_dtype,
         accelerator=accelerator,
@@ -298,18 +307,20 @@ def train(
     logger.info("***** Running training *****")
     logger.info(f"  Num examples = {len(train_dataset)}")
     logger.info(f"  Num batches each epoch = {len(train_dataloader)}")
-    logger.info(f"  Instantaneous batch size per device = {train_batch_size}")
+    logger.info(
+        f"  Instantaneous batch size per device = {train_batch_size}")
     logger.info(
         f"  Total train batch size (w. parallel, distributed & accumulation) = {total_batch_size}"
     )
-    logger.info(f"  Gradient Accumulation steps = {gradient_accumulation_steps}")
+    logger.info(
+        f"  Gradient Accumulation steps = {gradient_accumulation_steps}")
     logger.info(f"  Total optimization steps = {train_steps}")
     step = 0
     # End of config trainer
-    
-    if editing_config is not None and accelerator.is_main_process:
-        validation_sample_logger = SampleLogger(**editing_config, logdir=logdir)
 
+    if editing_config is not None and accelerator.is_main_process:
+        validation_sample_logger = SampleLogger(
+            **editing_config, logdir=logdir)
 
     # Only show the progress bar once on each machine.
     progress_bar = tqdm(
@@ -326,16 +337,15 @@ def train(
 
     train_data_yielder = make_data_yielder(train_dataloader)
 
-    
-    assert(train_dataset.video_len == 1), "Only support overfiting on a single video"
+    assert (train_dataset.video_len ==
+            1), "Only support overfiting on a single video"
 
-        
     while step < train_steps:
         batch = next(train_data_yielder)
         """************************* start of an iteration*******************************"""
         loss = trainer.step(batch)
         # torch.cuda.empty_cache()
-        
+
         """************************* end of an iteration*******************************"""
         # Checks if the accelerator has performed an optimization step behind the scenes
         if accelerator.sync_gradients:
@@ -344,45 +354,50 @@ def train(
 
             if accelerator.is_main_process:
 
-                if validation_sample_logger is not None and (step % validation_steps == 0):
+                if validation_sample_logger is not None and (
+                        step % validation_steps == 0):
                     unet.eval()
 
-                    val_image = rearrange(batch["images"].to(dtype=weight_dtype), "b c f h w -> (b f) c h w")
-                    
+                    val_image = rearrange(
+                        batch["images"].to(dtype=weight_dtype),
+                        "b c f h w -> (b f) c h w")
+
                     # Unet is changing in different iteration; we should invert online
-                    if editing_config.get('use_invertion_latents', False):
+                    if editing_config.get(
+                            'use_invertion_latents', False):
                         # Precompute the latents for this video to align the initial latents in training and test
                         assert batch["images"].shape[0] == 1, "Only support, overfiting on a single video"
                         # we only inference for latents, no training
                         vae.eval()
                         text_encoder.eval()
                         unet.eval()
-                        
+
                         text_embeddings = pipeline._encode_prompt(
-                                train_dataset.prompt, 
-                                device = accelerator.device, 
-                                num_images_per_prompt = 1, 
-                                do_classifier_free_guidance = True, 
-                                negative_prompt=None
+                            train_dataset.prompt,
+                            device=accelerator.device,
+                            num_images_per_prompt=1,
+                            do_classifier_free_guidance=True,
+                            negative_prompt=None
                         )
                         batch['latents_all_step'] = pipeline.prepare_latents_ddim_inverted(
-                            rearrange(batch["images"].to(dtype=weight_dtype), "b c f h w -> (b f) c h w"), 
-                            batch_size = 1 , 
-                            num_images_per_prompt = 1,  # not sure how to use it
-                            text_embeddings = text_embeddings
-                            )
+                            rearrange(
+                                batch["images"].to(
+                                    dtype=weight_dtype),
+                                "b c f h w -> (b f) c h w"),
+                            batch_size=1,
+                            num_images_per_prompt=1,  # not sure how to use it
+                            text_embeddings=text_embeddings
+                        )
                         batch['ddim_init_latents'] = batch['latents_all_step'][-1]
                     else:
-                        batch['ddim_init_latents'] = None                    
-                    
-                    
-                    
+                        batch['ddim_init_latents'] = None
+
                     validation_sample_logger.log_sample_images(
-                        image= val_image, # torch.Size([8, 3, 512, 512])
+                        image=val_image,  # torch.Size([8, 3, 512, 512])
                         pipeline=pipeline,
                         device=accelerator.device,
                         step=step,
-                        latents = batch['ddim_init_latents'],
+                        latents=batch['ddim_init_latents'],
                     )
                     torch.cuda.empty_cache()
                     unet.train()
@@ -391,15 +406,19 @@ def train(
                     accepts_keep_fp32_wrapper = "keep_fp32_wrapper" in set(
                         inspect.signature(accelerator.unwrap_model).parameters.keys()
                     )
-                    extra_args = {"keep_fp32_wrapper": True} if accepts_keep_fp32_wrapper else {}
-                    pipeline_save = get_obj_from_str(test_pipeline_config["target"]).from_pretrained(
+                    extra_args = {
+                        "keep_fp32_wrapper": True} if accepts_keep_fp32_wrapper else {}
+                    pipeline_save = get_obj_from_str(
+                        test_pipeline_config["target"]).from_pretrained(
                         pretrained_model_path,
-                        unet=accelerator.unwrap_model(unet, **extra_args),
-                    )
-                    checkpoint_save_path = os.path.join(logdir, f"checkpoint_{step}")
+                        unet=accelerator.unwrap_model(
+                            unet, **extra_args),)
+                    checkpoint_save_path = os.path.join(
+                        logdir, f"checkpoint_{step}")
                     pipeline_save.save_pretrained(checkpoint_save_path)
 
-        logs = {"loss": loss.detach().item(), "lr": lr_scheduler.get_last_lr()[0]}
+        logs = {"loss": loss.detach().item(),
+                "lr": lr_scheduler.get_last_lr()[0]}
         progress_bar.set_postfix(**logs)
         accelerator.log(logs, step=step)
 
