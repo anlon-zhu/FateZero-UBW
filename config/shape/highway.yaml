@@ -2,7 +2,7 @@
 pretrained_model_path: "./ckpt/stable-diffusion-v1-4"
 
 dataset_config:
-  path: "data/highway.mp4"
+  path: "data/highway"
   prompt: "a white van drives by a highway dashcam video with forests on either side"
   n_sample_frame: 24
   sampling_rate: 1
