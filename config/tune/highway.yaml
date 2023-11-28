@@ -1,0 +1,60 @@
+# CUDA_VISIBLE_DEVICES=3 python train_tune_a_video.py --config config/tune/jeep.yaml
+# There is no obvious difference between v1-4 and v1-4, we just choose to tune v1-5 randomly at the beginning of this project.
+pretrained_model_path: "./ckpt/stable-diffusion-v1-5"
+
+dataset_config:
+  path: "data/highway"
+  prompt: "a white van drives by a highway dashcam video with forests on either side"
+  n_sample_frame: 8
+  # n_sample_frame: 22
+  class_data_root: "data/negative_reg/car"
+  class_data_prompt: "a photo of a highway"
+
+  sampling_rate: 1
+  stride: 80
+  offset:
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+
+editing_config:
+  use_invertion_latents: True
+  use_inversion_attention: True
+  guidance_scale: 7.5
+  editing_prompts:
+    [
+      a white van drives by a dashcam on an autumn forrested highway,
+      a Scooby Doo Bus drive by a dashcam on a forrested highway,
+      a white van drives by a dashcam on a snowy highway,
+      a blue FordGT drives by a dashcam on a desert highway,
+      a BMW aggressively cuts off a car on a dashcam on a forrested highway,
+    ]
+  clip_length: "${..dataset_config.n_sample_frame}"
+  sample_seeds: [12734]
+
+  num_inference_steps: 50 # 15 minutes
+  strength: 0.99
+
+trainer_pipeline_config:
+  target: video_diffusion.trainer.ddpm_trainer.DDPMTrainer
+
+test_pipeline_config:
+  target: video_diffusion.pipelines.ddim_spatial_temporal.DDIMSpatioTemporalStableDiffusionPipeline
+
+model_config:
+  lora: 160
+  # temporal_downsample_time: 4
+  # SparseCausalAttention_index: [-1, 1, 'first', 'last']
+
+enable_xformers: True
+mixed_precision: "fp16"
+gradient_checkpointing: True
+
+train_steps: 1000
+validation_steps: 50
+checkpointing_steps: 50
+seed: 74831
+learning_rate: 1e-5
+# prior_preservation: 1.0
+train_temporal_conv: True
