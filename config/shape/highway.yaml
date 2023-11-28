@@ -20,9 +20,7 @@ editing_config:
     [
       a white van drives by a dashcam on an autumn forrested highway,
       a Scooby Doo Bus drive by a dashcam on a forrested highway,
-      a white van drives by a dashcam on a snowy highway,
       a blue FordGT drives by a dashcam on a desert highway,
-      a BMW aggressively cuts off a car on a dashcam on a forrested highway,
     ]
 
   p2p_config:
@@ -56,27 +54,7 @@ editing_config:
         default_: 0.5
       self_replace_steps: 0.5
       use_inversion_attention: True
-      blend_words: [["white", "van"], ["dashcam", "snowy", "highway"]]
-      blend_self_attention: True
-      blend_th: [0.3, 0.3]
-
-    3:
-      is_replace_controller: True
-      cross_replace_steps:
-        default_: 0.5
-      self_replace_steps: 0.5
-      use_inversion_attention: True
       blend_words: [["blue", "FordGT"], ["dashcam", "desert", "highway"]]
-      blend_self_attention: True
-      blend_th: [0.3, 0.3]
-
-    4:
-      is_replace_controller: True
-      cross_replace_steps:
-        default_: 0.5
-      self_replace_steps: 0.5
-      use_inversion_attention: True
-      blend_words: ["dashcam", "forrested", "highway"]
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
