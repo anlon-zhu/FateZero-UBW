@@ -80,13 +80,13 @@ editing_config:
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
-clip_length: "${..dataset_config.n_sample_frame}"
-sample_seeds: [0]
-prompt2prompt_edit: True
+  clip_length: "${..dataset_config.n_sample_frame}"
+  sample_seeds: [0]
+  prompt2prompt_edit: True
 
-# DDIM parameters
-guidance_scale: 7.5
-num_inference_steps: 50
+  # DDIM parameters
+  guidance_scale: 7.5
+  num_inference_steps: 50
 
 model_config:
   lora: 160
