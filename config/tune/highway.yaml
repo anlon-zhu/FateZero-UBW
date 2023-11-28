@@ -5,7 +5,7 @@ pretrained_model_path: "./ckpt/stable-diffusion-v1-5"
 dataset_config:
   path: "data/highway"
   prompt: "a white van drives by a highway dashcam video with forests on either side"
-  n_sample_frame: 24
+  n_sample_frame: 8
   # n_sample_frame: 22
   class_data_root: "data/negative_reg/car"
   class_data_prompt: "a photo of a highway"
