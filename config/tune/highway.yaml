@@ -25,7 +25,7 @@ editing_config:
   editing_prompts:
     [
       "a white van drives down a highway by a forest on a sunny autumn day. dashcam video",
-      "a Scooby-Doo-Bus drives down a highway by a forest on a sunny day. dashcam video",
+      "a Mystery-Machine van drives down a highway by a forest on a sunny day. dashcam video",
       "a blue FordGT drives down a highway by a desert on a sunny day. dashcam video",
     ]
   clip_length: "${..dataset_config.n_sample_frame}"
