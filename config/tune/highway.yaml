@@ -4,11 +4,11 @@ pretrained_model_path: "./ckpt/stable-diffusion-v1-5"
 
 dataset_config:
   path: "data/highway"
-  prompt: "a white van drives by a highway dashcam video with forests on either side"
+  prompt: "a white van drives down a highway by a forest on a sunny day. dashcam video"
   n_sample_frame: 8
   # n_sample_frame: 22
   class_data_root: "data/negative_reg/car"
-  class_data_prompt: "a photo of a highway"
+  class_data_prompt: "a photo of a car"
 
   sampling_rate: 1
   stride: 80
@@ -24,11 +24,9 @@ editing_config:
   guidance_scale: 7.5
   editing_prompts:
     [
-      a white van drives by a dashcam on an autumn forrested highway,
-      a Scooby Doo Bus drive by a dashcam on a forrested highway,
-      a white van drives by a dashcam on a snowy highway,
-      a blue FordGT drives by a dashcam on a desert highway,
-      a BMW aggressively cuts off a car on a dashcam on a forrested highway,
+      "a white van drives down a highway by a forest on a sunny autumn day. dashcam video",
+      "a Scooby-Doo-Bus drives down a highway by a forest on a sunny day. dashcam video",
+      "a blue FordGT drives down a highway by a desert on a sunny day. dashcam video",
     ]
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [12734]

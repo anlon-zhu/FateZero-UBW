@@ -2,7 +2,7 @@ pretrained_model_path: "./ckpt/highway_100"
 
 dataset_config:
   path: "data/highway"
-  prompt: "a white van drives by a highway dashcam video with forests on either side," # RENAME Inversion editing_prompts
+  prompt: "a white van drives down a highway by a forest on a sunny day. dashcam video" # RENAME Inversion editing_prompts
   n_sample_frame: 8
   sampling_rate: 1
   stride: 80
@@ -18,9 +18,9 @@ editing_config:
 
   editing_prompts:
     [
-      a white van drives by a dashcam on an autumn forrested highway,
-      a Scooby Doo Bus drive by a dashcam on a forrested highway,
-      a blue FordGT drives by a dashcam on a desert highway,
+      "a white van drives down a highway by a forest on a sunny autumn day. dashcam video",
+      "a Scooby-Doo-Bus drives down a highway by a forest on a sunny day. dashcam video",
+      "a blue FordGT drives down a highway by a desert on a sunny day. dashcam video",
     ]
 
   p2p_config:
@@ -32,8 +32,7 @@ editing_config:
       eq_params:
         words: ["autumn", "forrested"]
         values: [10, 10]
-      blend_words:
-        [["white", "van"], ["dashcam", "autumn", "forrested", "highway"]]
+      blend_words: [["white", "van"], ["autumn", "forest"]]
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
@@ -43,8 +42,7 @@ editing_config:
         default_: 0.5
       self_replace_steps: 0.5
       use_inversion_attention: True
-      blend_words:
-        [["Scooby", "Doo", "Bus"], ["dashcam", "forrested", "highway"]]
+      blend_words: [["Scooby", "Doo", "Bus"]]
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
@@ -54,7 +52,7 @@ editing_config:
         default_: 0.5
       self_replace_steps: 0.5
       use_inversion_attention: True
-      blend_words: [["blue", "FordGT"], ["dashcam", "desert", "highway"]]
+      blend_words: [["blue", "FordGT"]]
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
