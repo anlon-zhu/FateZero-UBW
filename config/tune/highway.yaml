@@ -7,8 +7,8 @@ dataset_config:
   prompt: "a white van drives down a highway by a forest on a sunny day. dashcam video"
   n_sample_frame: 8
   # n_sample_frame: 22
-  class_data_root: "data/negative_reg/car"
-  class_data_prompt: "a photo of a car"
+  # class_data_root: "data/negative_reg/car"
+  # class_data_prompt: "a photo of a car"
 
   sampling_rate: 1
   stride: 80
@@ -49,9 +49,9 @@ enable_xformers: True
 mixed_precision: "fp16"
 gradient_checkpointing: True
 
-train_steps: 1000
-validation_steps: 250
-checkpointing_steps: 250
+train_steps: 500
+validation_steps: 100
+checkpointing_steps: 100
 seed: 74831
 learning_rate: 1e-5
 # prior_preservation: 1.0
