@@ -55,7 +55,7 @@ editing_config:
         default_: 0.5
       self_replace_steps: 0.5
       eq_params:
-        words: ["blue", "race, "car"]
+        words: ["blue", "race", "car"]
         values: [2, 10, 10]
       use_inversion_attention: True
       blend_words: [["blue", "Ford", "race", car"]]
