@@ -18,25 +18,12 @@ editing_config:
 
   editing_prompts:
     [
-      "a white van drives down a highway by a forest on a sunny autumn day. dashcam video",
       "a Scooby-Doo van drives down a highway by a forest on a sunny day. dashcam video",
       "a blue FordGT drives down a highway by a desert on a sunny day. dashcam video",
     ]
 
   p2p_config:
     0:
-      is_replace_controller: False
-      cross_replace_steps:
-        default_: 0.8
-      self_replace_steps: 0.9
-      eq_params:
-        words: ["autumn", "forest"]
-        values: [2, 2]
-      blend_words: [["white", "van"], ["autumn", "forest"]]
-      blend_self_attention: True
-      blend_th: [0.3, 0.3]
-
-    1:
       is_replace_controller: True
       cross_replace_steps:
         default_: 0.5
@@ -49,7 +36,7 @@ editing_config:
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
-    2:
+    1:
       is_replace_controller: True
       cross_replace_steps:
         default_: 0.5
