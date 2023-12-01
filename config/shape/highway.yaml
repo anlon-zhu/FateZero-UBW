@@ -18,25 +18,11 @@ editing_config:
 
   editing_prompts:
     [
-      "a Scooby-Doo van drives down a highway by a forest on a sunny day. dashcam video",
       "a blue FordGT drives down a highway by a desert on a sunny day. dashcam video",
     ]
 
   p2p_config:
     0:
-      is_replace_controller: True
-      cross_replace_steps:
-        default_: 0.5
-      self_replace_steps: 0.5
-      eq_params:
-        words: ["Scooby-Doo", "Mystery-Machine"]
-        values: [2, 2]
-      use_inversion_attention: True
-      blend_words: [["Scooby", "Doo", "van"]]
-      blend_self_attention: True
-      blend_th: [0.3, 0.3]
-
-    1:
       is_replace_controller: True
       cross_replace_steps:
         default_: 0.5
