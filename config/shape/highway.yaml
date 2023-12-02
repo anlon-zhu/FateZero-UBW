@@ -25,15 +25,15 @@ editing_config:
     0:
       is_replace_controller: True
       cross_replace_steps:
-        default_: 0.5
-      self_replace_steps: 0.5
-      eq_params:
-        words: ["blue", "race", "car"]
-        values: [2, 10, 10]
+        default_: 0.2
+      self_replace_steps: 0.6
+      # eq_params:
+      #   words: ["blue", "race", "car"]
+      #   values: [2, 10, 10]
       use_inversion_attention: True
       blend_words: [["blue", "Ford", "race", car"]]
       blend_self_attention: True
-      blend_th: [0.3, 0.3]
+      blend_th: [0.0, 0.0]
 
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [0]
