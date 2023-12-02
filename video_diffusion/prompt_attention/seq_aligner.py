@@ -27,8 +27,8 @@ class ScoreParams:
             return self.mismatch
         else:
             return self.match
-        
-    
+
+
 def get_matrix(size_x, size_y, gap):
     matrix = []
     for i in range(len(size_x) + 1):
@@ -51,7 +51,7 @@ def get_matrix(size_x, size_y, gap):
 
 
 def get_traceback_matrix(size_x, size_y):
-    matrix = np.zeros((size_x + 1, size_y +1), dtype=np.int32)
+    matrix = np.zeros((size_x + 1, size_y + 1), dtype=np.int32)
     matrix[0, 1:] = 1
     matrix[1:, 0] = 2
     matrix[0, 0] = 4
@@ -65,7 +65,8 @@ def global_align(x, y, score):
         for j in range(1, len(y) + 1):
             left = matrix[i, j - 1] + score.gap
             up = matrix[i - 1, j] + score.gap
-            diag = matrix[i - 1, j - 1] + score.mis_match_char(x[i - 1], y[j - 1])
+            diag = matrix[i - 1,
+                          j - 1] + score.mis_match_char(x[i - 1], y[j - 1])
             matrix[i, j] = max(left, up, diag)
             if matrix[i, j] == left:
                 trace_back[i, j] = 1
@@ -114,7 +115,8 @@ def get_mapper(x: str, y: str, tokenizer, max_len=77):
     alphas[: mapper_base.shape[0]] = mapper_base[:, 1].ne(-1).float()
     mapper = torch.zeros(max_len, dtype=torch.int64)
     mapper[:mapper_base.shape[0]] = mapper_base[:, 1]
-    mapper[mapper_base.shape[0]:] = len(y_seq) + torch.arange(max_len - len(y_seq))
+    mapper[mapper_base.shape[0]:] = len(
+        y_seq) + torch.arange(max_len - len(y_seq))
     return mapper, alphas
 
 
@@ -122,7 +124,9 @@ def get_refinement_mapper(prompts, tokenizer, max_len=77):
     x_seq = prompts[0]
     mappers, alphas = [], []
     for i in range(1, len(prompts)):
-        mapper, alpha = get_mapper(x_seq, prompts[i], tokenizer, max_len)
+        mapper, alpha = get_mapper(
+            x_seq, prompts[i],
+            tokenizer, max_len)
         mappers.append(mapper)
         alphas.append(alpha)
     return torch.stack(mappers), torch.stack(alphas)
@@ -131,12 +135,16 @@ def get_refinement_mapper(prompts, tokenizer, max_len=77):
 def get_word_inds(text: str, word_place: int, tokenizer):
     split_text = text.split(" ")
     if type(word_place) is str:
-        word_place = [i for i, word in enumerate(split_text) if word_place == word]
+        word_place = [i for i, word in enumerate(
+            split_text) if word_place == word]
     elif type(word_place) is int:
         word_place = [word_place]
     out = []
     if len(word_place) > 0:
-        words_encode = [tokenizer.decode([item]).strip("#") for item in tokenizer.encode(text)][1:-1]
+        words_encode = [
+            tokenizer.decode([item]).strip("#")
+            for item in tokenizer.encode(text)][
+            1: -1]
         cur_len, ptr = 0, 0
 
         for i in range(len(words_encode)):
@@ -153,9 +161,11 @@ def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
     words_x = x.split(' ')
     words_y = y.split(' ')
     if len(words_x) != len(words_y):
-        raise ValueError(f"attention replacement edit can only be applied on prompts with the same length"
-                         f" but prompt A has {len(words_x)} words and prompt B has {len(words_y)} words.")
-    inds_replace = [i for i in range(len(words_y)) if words_y[i] != words_x[i]]
+        raise ValueError(
+            f"attention replacement edit can only be applied on prompts with the same length"
+            f" but prompt A has {len(words_x)} words and prompt B has {len(words_y)} words.")
+    inds_replace = [i for i in range(
+        len(words_y)) if words_y[i] != words_x[i]]
     inds_source = [get_word_inds(x, i, tokenizer) for i in inds_replace]
     inds_target = [get_word_inds(y, i, tokenizer) for i in inds_replace]
     mapper = np.zeros((max_len, max_len))
@@ -185,12 +195,11 @@ def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
     return torch.from_numpy(mapper).float()
 
 
-
 def get_replacement_mapper(prompts, tokenizer, max_len=77):
     x_seq = prompts[0]
     mappers = []
     for i in range(1, len(prompts)):
-        mapper = get_replacement_mapper_(x_seq, prompts[i], tokenizer, max_len)
+        mapper = get_replacement_mapper_(
+            x_seq, prompts[i], tokenizer, max_len)
         mappers.append(mapper)
     return torch.stack(mappers)
-
