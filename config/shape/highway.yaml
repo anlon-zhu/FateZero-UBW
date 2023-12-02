@@ -19,7 +19,7 @@ editing_config:
   editing_prompts:
     [
       "a white van drives down a highway by a forest on a sunny day. dashcam video",
-      "a blue racecar drives down a highway by a desert on a sunny day. dashcam video",
+      "a Lamborghini car drives down a highway by a desert on a sunny day. dashcam video",
     ]
   p2p_config:
     0:
@@ -40,7 +40,7 @@ editing_config:
       # If you change the shape of object better to use all three line, otherwise, no need.
       # Without following three lines, all self-attention will be replaced
       # Usefull in shape editing
-      blend_words: [["van"], ["racecar"]]
+      blend_words: [["van"], ["car"]]
       blend_self_attention: True
       # blend_latents: False   #  Directly copy the latents, performance not so good in our case
 
@@ -57,7 +57,7 @@ editing_config:
       use_inversion_attention: True
       is_replace_controller: True
 
-      blend_words: [["white", "van"], ["blue", "racecar"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
+      blend_words: [["white", "van"], ["Lamborghini", "car"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
       blend_self_attention: True
       blend_th: [0.3, 0.3]
 
