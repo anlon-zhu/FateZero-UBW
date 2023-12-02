@@ -24,7 +24,7 @@ editing_config:
   guidance_scale: 7.5
   editing_prompts:
     [
-      "a Lamborghini car drives down a highway by a desert on a sunny day. dashcam video",
+      "a blue racecar drives down a highway by a desert on a sunny day. dashcam video",
     ]
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [12734]
@@ -47,7 +47,7 @@ enable_xformers: True
 mixed_precision: "fp16"
 gradient_checkpointing: True
 
-train_steps: 300
+train_steps: 500
 validation_steps: 100
 checkpointing_steps: 100
 seed: 74831
