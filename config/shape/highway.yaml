@@ -52,7 +52,9 @@ editing_config:
     1:
       cross_replace_steps:
         default_: 0.5
-      self_replace_steps: 0.5
+      # Source background structure preserving, in [0, 1].
+      # e.g., =0.6 Replace the first 60% steps self-attention
+      self_replace_steps: 0.8
 
       use_inversion_attention: True
       is_replace_controller: True
