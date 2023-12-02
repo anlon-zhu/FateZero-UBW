@@ -19,7 +19,7 @@ editing_config:
   editing_prompts:
     [
       "a white van drives down a highway by a forest on a sunny day. dashcam video",
-      "a Lamborghini car drives down a highway by a desert on a sunny day. dashcam video",
+      "a Lamborghini car drives down a highway by a forest on a sunny day. dashcam video",
     ]
   p2p_config:
     0:
