@@ -158,7 +158,7 @@ def get_word_inds(text: str, word_place: int, tokenizer):
 
 
 def get_replacement_mapper_(
-        x: str, y: str, tokenizer, max_len=77, target_weight=1):
+        x: str, y: str, tokenizer, max_len=77):
     words_x = x.split(' ')
     words_y = y.split(' ')
     if len(words_x) != len(words_y):
@@ -176,7 +176,8 @@ def get_replacement_mapper_(
         if cur_inds < len(inds_source) and inds_source[cur_inds][0] == i:
             inds_source_, inds_target_ = inds_source[cur_inds], inds_target[cur_inds]
             if len(inds_source_) == len(inds_target_):
-                mapper[inds_source_, inds_target_] = target_weight
+                # try to make the attention weight to be 2
+                mapper[inds_source_, inds_target_] = 2
             else:
                 ratio = 1 / len(inds_target_)
                 for i_t in inds_target_:
@@ -197,11 +198,11 @@ def get_replacement_mapper_(
 
 
 def get_replacement_mapper(
-        prompts, tokenizer, max_len=77, target_weight=1):
+        prompts, tokenizer, max_len=77):
     x_seq = prompts[0]
     mappers = []
     for i in range(1, len(prompts)):
         mapper = get_replacement_mapper_(
-            x_seq, prompts[i], tokenizer, max_len, target_weight)
+            x_seq, prompts[i], tokenizer, max_len)
         mappers.append(mapper)
     return torch.stack(mappers)
