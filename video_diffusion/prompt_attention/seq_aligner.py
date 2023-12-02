@@ -158,7 +158,7 @@ def get_word_inds(text: str, word_place: int, tokenizer):
 
 
 def get_replacement_mapper_(
-        x: str, y: str, tokenizer, max_len=77, target_weight=1.0):
+        x: str, y: str, tokenizer, max_len=77, target_weight=1):
     words_x = x.split(' ')
     words_y = y.split(' ')
     if len(words_x) != len(words_y):
@@ -197,7 +197,7 @@ def get_replacement_mapper_(
 
 
 def get_replacement_mapper(
-        prompts, tokenizer, max_len=77, target_weight=1.0):
+        prompts, tokenizer, max_len=77, target_weight=1):
     x_seq = prompts[0]
     mappers = []
     for i in range(1, len(prompts)):
