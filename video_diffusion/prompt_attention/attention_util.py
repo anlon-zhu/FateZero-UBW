@@ -236,7 +236,7 @@ class AttentionReplace(AttentionControlEdit):
             save_self_attention = save_self_attention,
             disk_store=disk_store
             )
-        self.mapper = seq_aligner.get_replacement_mapper(prompts, tokenizer).to(device)
+        self.mapper = seq_aligner.get_replacement_mapper(prompts, tokenizer, 2.0).to(device)
 
 class AttentionRefine(AttentionControlEdit):
 

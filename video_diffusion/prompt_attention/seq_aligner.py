@@ -157,7 +157,8 @@ def get_word_inds(text: str, word_place: int, tokenizer):
     return np.array(out)
 
 
-def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
+def get_replacement_mapper_(
+        x: str, y: str, tokenizer, max_len=77, target_weight=1.0):
     words_x = x.split(' ')
     words_y = y.split(' ')
     if len(words_x) != len(words_y):
@@ -175,7 +176,7 @@ def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
         if cur_inds < len(inds_source) and inds_source[cur_inds][0] == i:
             inds_source_, inds_target_ = inds_source[cur_inds], inds_target[cur_inds]
             if len(inds_source_) == len(inds_target_):
-                mapper[inds_source_, inds_target_] = 1
+                mapper[inds_source_, inds_target_] = target_weight
             else:
                 ratio = 1 / len(inds_target_)
                 for i_t in inds_target_:
@@ -195,11 +196,12 @@ def get_replacement_mapper_(x: str, y: str, tokenizer, max_len=77):
     return torch.from_numpy(mapper).float()
 
 
-def get_replacement_mapper(prompts, tokenizer, max_len=77):
+def get_replacement_mapper(
+        prompts, tokenizer, max_len=77, target_weight=1.0):
     x_seq = prompts[0]
     mappers = []
     for i in range(1, len(prompts)):
         mapper = get_replacement_mapper_(
-            x_seq, prompts[i], tokenizer, max_len)
+            x_seq, prompts[i], tokenizer, max_len, target_weight)
         mappers.append(mapper)
     return torch.stack(mappers)
