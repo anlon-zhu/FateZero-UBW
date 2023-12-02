@@ -18,7 +18,7 @@ editing_config:
 
   editing_prompts:
     [
-      "a blue Ford race car drives down a highway by a desert on a sunny day. dashcam video",
+      "a blue racecar drives down a highway by a desert on a sunny day. dashcam video",
     ]
 
   p2p_config:
@@ -31,7 +31,7 @@ editing_config:
       #   words: ["blue", "race", "car"]
       #   values: [2, 10, 10]
       use_inversion_attention: True
-      blend_words: [["blue", "Ford", "race", car"]]
+      blend_words: [["blue", "racecar"]]
       blend_self_attention: True
       blend_th: [0.0, 0.0]
 
