@@ -158,7 +158,8 @@ def get_word_inds(text: str, word_place: int, tokenizer):
 
 
 def get_replacement_mapper_(
-        x: str, y: str, tokenizer, max_len=77, target_weight=1):
+        x: str, y: str, tokenizer, max_len=77,
+        target_weight=1):
     words_x = x.split(' ')
     words_y = y.split(' ')
     if len(words_x) != len(words_y):
