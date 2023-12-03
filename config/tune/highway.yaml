@@ -47,7 +47,7 @@ enable_xformers: True
 mixed_precision: "fp16"
 gradient_checkpointing: True
 
-train_steps: 500
+train_steps: 300
 validation_steps: 100
 checkpointing_steps: 100
 seed: 74831
