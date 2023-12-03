@@ -189,7 +189,7 @@ class SpatialBlender:
             for word in words_:
                 # debug me
                 ind = ptp_utils.get_word_inds(prompt, word, tokenizer)
-                alpha_layers[i, :, :, :, :, ind] = 2
+                alpha_layers[i, :, :, :, :, ind] = 1
         # self.alpha_layers.shape = torch.Size([2, 1, 1, 1, 1, 77]), 1 denotes the world to be replaced
         if substruct_words is not None:
             substruct_layers = torch.zeros(
