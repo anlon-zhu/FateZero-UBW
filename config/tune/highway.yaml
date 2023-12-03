@@ -24,7 +24,7 @@ editing_config:
   guidance_scale: 7.5
   editing_prompts:
     [
-      "a blue racecar drives down a highway by a desert on a sunny day. dashcam video",
+      "a blue racecar drives down a highway by a forest on a sunny day. dashcam video",
     ]
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [12734]
