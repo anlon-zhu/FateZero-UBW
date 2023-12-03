@@ -59,7 +59,7 @@ editing_config:
 
       blend_words: [["white", "van"], ["Lamborghini", "car"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
       blend_self_attention: True
-      blend_th: [0.3, 0.3]
+      blend_th: [0.1, 0.1]
 
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [0]
