@@ -20,6 +20,7 @@ editing_config:
     [
       "a white van drives down a highway by a forest on a sunny day. dashcam video",
       "a Lamborghini car drives down a highway by a forest on a sunny day. dashcam video",
+      "a Toyota van drives down a highway by a forest on a sunny day. dashcam video",
     ]
   p2p_config:
     0:
@@ -60,6 +61,17 @@ editing_config:
       blend_words: [["white", "van"], ["Lamborghini", "car"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
       blend_self_attention: True
       blend_th: [0.3, 0.3]
+    2:
+      cross_replace_steps:
+        default_: 0.5
+      self_replace_steps: 0.5
+
+      use_inversion_attention: True
+      is_replace_controller: True
+
+      blend_words: [["white", "van"], ["Toyota", "van"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
+      blend_self_attention: True
+      blend_th: [0.4, 0.4]
 
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [0]
