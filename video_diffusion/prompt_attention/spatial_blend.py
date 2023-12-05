@@ -49,11 +49,14 @@ class SpatialBlender:
         # Normalize the mask
         mask = mask / mask.max(-2,
                                keepdims=True)[0].max(-1, keepdims=True)[0]
-        # Apply sigmoid function for a continuous mask
-        steepness = 1.25  # TODO: pass configurable hyperparameter to yaml
-        mask = 1 / (1 + torch.exp(-steepness * (
-            mask - self.th[1 - int(use_pool)])))
-        # mask = mask.gt(self.th[1-int(use_pool)]) Non-continuous mask
+        # Either A: Apply sigmoid function for a continuous mask
+        # steepness = 1.25  # TODO: pass configurable hyperparameter to yaml
+        # mask = 1 / (1 + torch.exp(-steepness * (
+        #     mask - self.th[1 - int(use_pool)])))
+
+        # or B: Binary mask
+        mask = mask.gt(self.th[1-int(use_pool)])
+
         if self.prompt_choose == 'both':
             assert mask.shape[0] == 2, "If using both source and target prompt"
             mask = mask[:1] + mask
