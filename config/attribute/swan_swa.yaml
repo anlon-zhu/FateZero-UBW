@@ -27,8 +27,6 @@ editing_config:
 
       # foreground texture style
       a Swarovski crystal swan with a red beak swimming in a river near a wall and bushes,
-
-      cartoon photo of a black swan with a red beak swimming in a river near a wall and bushes,
     ]
   p2p_config:
     0:
@@ -69,16 +67,6 @@ editing_config:
 
       eq_params:
         words: ["Swarovski", "crystal"]
-        values: [5, 5] # amplify attention to the word "tiger" by *2
-      use_inversion_attention: True
-    2:
-      is_replace_controller: False
-      cross_replace_steps:
-        default_: 0.8
-      self_replace_steps: 0.6
-
-      eq_params:
-        words: ["cartoon", "photo"]
         values: [5, 5] # amplify attention to the word "tiger" by *2
       use_inversion_attention: True
 
