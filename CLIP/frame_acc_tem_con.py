@@ -65,7 +65,7 @@ def folder_success(folder, source_prompt, target_prompt):
         len(normalized_feature_list) - 1)
 
 
-config_yaml = 'CLIP/bench_avtav.yaml'
+config_yaml = 'bench_avtav.yaml'
 Omegadict = OmegaConf.load(config_yaml)
 print(Omegadict)
 
