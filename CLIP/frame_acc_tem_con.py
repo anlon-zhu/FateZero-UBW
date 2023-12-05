@@ -70,9 +70,9 @@ Omegadict = OmegaConf.load(config_yaml)
 print(Omegadict)
 
 
-dict_folder = './result/shape/lambo_continuous_k1.25_t0.3_1s_style/step_0_1_0'
+dict_folder = './result/shape/lambo_continuous_k1.25_t0.3_1s_style/sample/step_0_1_0'
 sub_folder_list = sorted(glob(f'{dict_folder}/*'))
-print(sub_folder_list)
+print("subfolder", sub_folder_list)
 
 folder_success_rate_list = []
 folder_temp_const_list = []
