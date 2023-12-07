@@ -1,5 +1,5 @@
 import os
-import numpy as  np
+import numpy as np
 from typing import List, Union
 import PIL
 import copy
@@ -11,8 +11,9 @@ import torch.utils.checkpoint
 
 from diffusers.pipeline_utils import DiffusionPipeline
 from tqdm.auto import tqdm
-from video_diffusion.common.image_util import make_grid, annotate_image
+from video_diffusion.common.image_util import make_grid, annotate_image, save_images_as_folder
 from video_diffusion.common.image_util import save_gif_mp4_folder_type
+from video_diffusion.common.util import get_time_string
 
 
 class P2pSampleLogger:
@@ -31,7 +32,7 @@ class P2pSampleLogger:
         annotate_size: int = 15,
         use_make_grid: bool = True,
         grid_column_size: int = 2,
-        prompt2prompt_edit: bool=False,
+        prompt2prompt_edit: bool = False,
         p2p_config: dict = None,
         use_inversion_attention: bool = True,
         source_prompt: str = None,
@@ -48,7 +49,9 @@ class P2pSampleLogger:
             max_num_samples_per_prompt = int(1e5)
             if num_samples_per_prompt > max_num_samples_per_prompt:
                 raise ValueError
-            sample_seeds = torch.randint(0, max_num_samples_per_prompt, (num_samples_per_prompt,))
+            sample_seeds = torch.randint(
+                0, max_num_samples_per_prompt,
+                (num_samples_per_prompt,))
             sample_seeds = sorted(sample_seeds.numpy().tolist())
         self.sample_seeds = sample_seeds
 
@@ -63,7 +66,7 @@ class P2pSampleLogger:
         self.p2p_config = p2p_config
         self.use_inversion_attention = use_inversion_attention
         self.source_prompt = source_prompt
-        self.traverse_p2p_config =traverse_p2p_config
+        self.traverse_p2p_config = traverse_p2p_config
 
     def log_sample_images(
         self, pipeline: DiffusionPipeline,
@@ -71,21 +74,26 @@ class P2pSampleLogger:
         image: Union[torch.FloatTensor, PIL.Image.Image] = None,
         latents: torch.FloatTensor = None,
         uncond_embeddings_list: List[torch.FloatTensor] = None,
-        save_dir = None,
+        save_dir=None,
     ):
         torch.cuda.empty_cache()
         samples_all = []
         attention_all = []
         # handle input image
         if image is not None:
-            input_pil_images = pipeline.numpy_to_pil(tensor_to_numpy(image))[0]
-            if self.annotate :
+            input_pil_images = pipeline.numpy_to_pil(
+                tensor_to_numpy(image))[0]
+            if self.annotate:
                 samples_all.append([
-                            annotate_image(image, "input sequence", font_size=self.annotate_size) for image in input_pil_images
-                        ])
+                    annotate_image(
+                        image, "input sequence",
+                        font_size=self.annotate_size)
+                    for image in input_pil_images])
             else:
                 samples_all.append(input_pil_images)
-        for idx, prompt in enumerate(tqdm(self.editing_prompts, desc="Generating sample images")):
+        for idx, prompt in enumerate(
+            tqdm(
+                self.editing_prompts, desc="Generating sample images")):
             if self.prompt2prompt_edit:
                 if self.traverse_p2p_config:
                     p2p_config_now = copy.deepcopy(self.p2p_config[idx])
@@ -99,9 +107,11 @@ class P2pSampleLogger:
 
                 else:
                     edit_type = 'swap'
-                    p2p_config_now.update({'save_self_attention': False})
+                    p2p_config_now.update(
+                        {'save_self_attention': False})
 
-                p2p_config_now.update({'use_inversion_attention': self.use_inversion_attention})
+                p2p_config_now.update(
+                    {'use_inversion_attention': self.use_inversion_attention})
             else:
                 edit_type = None
 
@@ -111,9 +121,9 @@ class P2pSampleLogger:
                 generator.manual_seed(seed)
                 sequence_return = pipeline(
                     prompt=input_prompt,
-                    source_prompt = self.editing_prompts[0] if self.source_prompt is None else self.source_prompt,
-                    edit_type = edit_type,
-                    image=image, # torch.Size([8, 3, 512, 512])
+                    source_prompt=self.editing_prompts[0] if self.source_prompt is None else self.source_prompt,
+                    edit_type=edit_type,
+                    image=image,  # torch.Size([8, 3, 512, 512])
                     strength=self.strength,
                     generator=generator,
                     num_inference_steps=self.num_inference_steps,
@@ -121,23 +131,25 @@ class P2pSampleLogger:
                     guidance_scale=self.guidance_scale,
                     num_images_per_prompt=1,
                     # used in null inversion
-                    latents = latents,
-                    uncond_embeddings_list = uncond_embeddings_list,
-                    save_path = save_dir,
+                    latents=latents,
+                    uncond_embeddings_list=uncond_embeddings_list,
+                    save_path=save_dir,
                     **p2p_config_now,
                 )
                 if self.prompt2prompt_edit:
                     sequence = sequence_return['sdimage_output'].images[0]
                     attention_output = sequence_return['attention_output']
-                    
+
                 else:
                     sequence = sequence_return.images[0]
                 torch.cuda.empty_cache()
 
                 if self.annotate:
                     images = [
-                        annotate_image(image, prompt, font_size=self.annotate_size) for image in sequence
-                    ]
+                        annotate_image(
+                            image, prompt,
+                            font_size=self.annotate_size)
+                        for image in sequence]
                 else:
                     images = sequence
                 if self.make_grid:
@@ -146,26 +158,45 @@ class P2pSampleLogger:
                         if attention_output is not None:
                             attention_all.append(attention_output)
 
-                save_path = os.path.join(self.logdir, f"step_{step}_{idx}_{seed}.gif")
+                save_path = os.path.join(
+                    self.logdir, f"step_{step}_{idx}_{seed}.gif")
                 save_gif_mp4_folder_type(images, save_path)
+
+                # Save for paper
+                time_string = get_time_string()
+                new_logdir = self.logdir.split(
+                    '/')[-1] + f"_{time_string}"
+                new_save_path = f"result/paper/{new_logdir}"
+                print(f"Saving to {new_save_path}")
+                save_images_as_folder(images, new_save_path)
 
                 if self.prompt2prompt_edit:
 
                     if attention_output is not None:
-                        save_gif_mp4_folder_type(attention_output, save_path.replace('.gif', 'atten.gif'))
+                        save_gif_mp4_folder_type(
+                            attention_output, save_path.replace(
+                                '.gif', 'atten.gif'))
 
         if self.make_grid:
-            samples_all = [make_grid(images, cols=int(np.ceil(np.sqrt(len(samples_all))))) for images in zip(*samples_all)]
+            samples_all = [
+                make_grid(
+                    images,
+                    cols=int(
+                        np.ceil(
+                            np.sqrt(len(samples_all)))))
+                for images in zip(*samples_all)]
             save_path = os.path.join(self.logdir, f"step_{step}.gif")
             save_gif_mp4_folder_type(samples_all, save_path)
             if self.prompt2prompt_edit:
-                if len(attention_all) > 0 :
-                    attention_all = [make_grid(images, cols=1) for images in zip(*attention_all)]
                 if len(attention_all) > 0:
-                    save_gif_mp4_folder_type(attention_all, save_path.replace('.gif', 'atten.gif'))
+                    attention_all = [
+                        make_grid(images, cols=1)
+                        for images in zip(*attention_all)]
+                if len(attention_all) > 0:
+                    save_gif_mp4_folder_type(
+                        attention_all, save_path.replace(
+                            '.gif', 'atten.gif'))
         return samples_all
-
-
 
 
 def tensor_to_numpy(image, b=1):
