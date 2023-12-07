@@ -22,3 +22,8 @@ lambo_f_0.3:
   path: ../result/shape/lambo_f_0.3/train_samples
   source: a white van drives down a highway by a forest on a sunny day. dashcam video
   target: a Lamborghini car drives down a highway by a forest on a sunny day. dashcam video
+
+lambo_continuous_mask:
+  path: ../result/shape/lambo_continuous_mask/train_samples
+  source: a white van drives down a highway by a forest on a sunny day. dashcam video
+  target: a Lamborghini car drives down a highway by a forest on a sunny day. dashcam video
