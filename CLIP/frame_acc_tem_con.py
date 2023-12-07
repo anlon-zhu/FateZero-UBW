@@ -65,7 +65,7 @@ def folder_success(folder, source_prompt, target_prompt):
     print(f'average edit success rate: {avg/len(file_list)}')
 
     return count / len(file_list), frame_const_list_sum / (
-        len(normalized_feature_list) - 1)
+        len(normalized_feature_list) - 1), avg/len(file_list)
 
 
 config_yaml = 'bench_avtav.yaml'
@@ -79,17 +79,20 @@ print("subfolder", sub_folder_list)
 
 folder_success_rate_list = []
 folder_temp_const_list = []
+folder_cls_list = []
 
 for k in sub_folder_list:
     print(k)
     v = Omegadict[os.path.basename(k)]
-    folder_success_rate, folder_temp_const = folder_success(
+    folder_success_rate, folder_temp_const, folder_cls = folder_success(
         k, v['source'], v['target'])
     print(f'folder_success_rate {folder_success_rate}')
     print(f'folder_temporal_consistency {folder_temp_const}')
+    print(f'folder_cls {folder_cls}')
     folder_success_rate_list.append(folder_success_rate)
     folder_temp_const_list.append(
         folder_temp_const.detach().cpu().numpy()[0])
+    folder_cls_list.append(folder_cls)
 
 print('folder_success_rate list :')
 print(folder_success_rate_list)
@@ -97,8 +100,13 @@ print(folder_success_rate_list)
 print('folder_temporal_consistency list :')
 print(folder_temp_const_list)
 
+print('folder_cls list :')
+print(folder_cls_list)
+
 dataset_average_rate = (np.array(folder_success_rate_list)).mean()
 dataset_average_tempconst = np.array(folder_temp_const_list).mean()
+dataset_average_cls = np.array(folder_cls_list).mean()
 
 print(f'dataset_average_rate {dataset_average_rate}')
 print(f'dataset_average_tempconst {dataset_average_tempconst}')
+print(f'dataset_average_cls {dataset_average_cls}')
