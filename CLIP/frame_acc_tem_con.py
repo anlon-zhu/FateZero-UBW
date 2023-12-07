@@ -32,7 +32,7 @@ def edit_success(image_path, source_prompt, target_prompt):
         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
     print("Label probs:", probs)
-    return probs[0, 1] >= probs[0, 0], image_features, probs[1]
+    return probs[0, 1] >= probs[0, 0], image_features, probs[0, 1]
 
 
 def folder_success(folder, source_prompt, target_prompt):
