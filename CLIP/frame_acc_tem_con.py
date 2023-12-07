@@ -32,7 +32,7 @@ def edit_success(image_path, source_prompt, target_prompt):
         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
     print("Label probs:", probs)
-    return probs[0, 1] >= probs[0, 0], image_features
+    return probs[0, 1] >= probs[0, 0], image_features, probs[1]
 
 
 def folder_success(folder, source_prompt, target_prompt):
@@ -41,11 +41,13 @@ def folder_success(folder, source_prompt, target_prompt):
     normalized_feature_list = []
     print(file_list)
     count = 0.0
+    avg = 0.0
     for f_path in file_list:
-        success, image_feature = edit_success(
+        success, image_feature, prob = edit_success(
             f_path, source_prompt, target_prompt)
         if success:
             count += 1.0
+        avg += prob
         normalized_feature_list.append(
             image_feature/torch.sqrt(torch.sum(image_feature**2, axis=1, keepdims=True)))
     frame_const_list = []
@@ -60,6 +62,7 @@ def folder_success(folder, source_prompt, target_prompt):
     frame_const_list_avg = frame_const_list_sum / \
         (len(normalized_feature_list)-1)
     print(f'average temporal frame consistency: {frame_const_list_avg}')
+    print(f'average edit success rate: {avg/len(file_list)}')
 
     return count / len(file_list), frame_const_list_sum / (
         len(normalized_feature_list) - 1)
