@@ -137,6 +137,7 @@ class SampleLogger:
                 new_logdir = self.logdir.split(
                     '/')[-1] + f"_{time_string}"
                 new_save_path = f"result/paper/{new_logdir}"
+                print(f"Saving to {new_save_path}")
                 save_images_as_folder(images, new_save_path)
 
                 if self.prompt2prompt_edit:
