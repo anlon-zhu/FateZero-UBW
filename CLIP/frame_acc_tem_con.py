@@ -68,7 +68,7 @@ def folder_success(folder, source_prompt, target_prompt):
         len(normalized_feature_list) - 1), avg/len(file_list)
 
 
-config_yaml = 'bench_avtav.yaml'
+config_yaml = 'bench_attributes.yaml'
 Omegadict = OmegaConf.load(config_yaml)
 print(Omegadict)
 
