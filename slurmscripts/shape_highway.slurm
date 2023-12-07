@@ -16,4 +16,4 @@ module purge
 module load anaconda3/2023.3
 conda activate avtav
 
-accelerate launch test_fatezero.py --config="config/shape/highway.yaml"
+accelerate launch test_fatezero.py --config="config/attribute/highway.yaml"
