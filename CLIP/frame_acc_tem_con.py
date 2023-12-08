@@ -73,7 +73,7 @@ Omegadict = OmegaConf.load(config_yaml)
 print(Omegadict)
 
 
-dict_folder = '../result/paper'
+dict_folder = '../result/continuous_bench_attri'
 sub_folder_list = sorted(glob(f'{dict_folder}/*'))
 print("subfolder", sub_folder_list)
 
