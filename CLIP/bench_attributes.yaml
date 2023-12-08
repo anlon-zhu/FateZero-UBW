@@ -8,11 +8,6 @@ bear_leopard:
   source: a brown bear walking on the rock against a wall
   target: a yellow leopard walking on the rock against a wall
 
-bear_lion:
-  path: ../result/attribute/bear_tiger_lion_leopard/train_samples
-  source: a brown bear walking on the rock against a wall
-  target: a brown lion walking on the rock against a wall
-
 bus_gpu:
   path: ../result/attribute/bus_gpu/train_samples
   source: a white and blue bus on the road
