@@ -21,11 +21,15 @@ def concatenate_images_from_directory(directory_path, output_path):
     width, height = img_list[0].size
 
     # Create a new blank image with a width that can accommodate all input images horizontally
-    new_image = Image.new('RGB', (width * len(img_list), height))
+    new_image = Image.new('RGB', (width * len(img_list), height * 2))
 
-    # Paste each image horizontally
-    for i, img in enumerate(img_list):
+    # Paste each image horizontally in the top row
+    for i, img in enumerate(img_list[:len(img_list)//2]):
         new_image.paste(img, (i * width, 0))
+
+    # Paste each image horizontally in the bottom row
+    for i, img in enumerate(img_list[len(img_list)//2:]):
+        new_image.paste(img, (i * width, height))
 
     # Save the concatenated image
     new_image.save(output_path)
