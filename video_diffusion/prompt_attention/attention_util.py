@@ -263,7 +263,8 @@ class AttentionReplace(AttentionControlEdit):
             additional_attention_store=None,
             use_inversion_attention=False,
             attention_blend: SpatialBlender = None,
-            save_self_attention: bool = True, disk_store=False):
+            save_self_attention: bool = True, disk_store=False,
+            target_weight=1):
         super(
             AttentionReplace, self).__init__(
             prompts, num_steps, cross_replace_steps, self_replace_steps,
@@ -372,17 +373,18 @@ def get_equalizer(
     return equalizer
 
 
-def make_controller(tokenizer, prompts: List[str], is_replace_controller: bool,
-                    cross_replace_steps: Dict[str, float], self_replace_steps: float = 0.0,
-                    blend_words=None, equilizer_params=None,
-                    additional_attention_store=None, use_inversion_attention=False, blend_th: float = (0.3, 0.3),
-                    NUM_DDIM_STEPS=None,
-                    blend_latents=False,
-                    blend_self_attention=False,
-                    save_path=None,
-                    save_self_attention=True,
-                    disk_store=False
-                    ) -> AttentionControlEdit:
+def make_controller(tokenizer, prompts: List[str],
+                    is_replace_controller: bool,
+                    cross_replace_steps: Dict[str, float],
+                    self_replace_steps: float = 0.0, blend_words=None,
+                    equilizer_params=None,
+                    additional_attention_store=None,
+                    use_inversion_attention=False,
+                    blend_th: float = (0.3, 0.3),
+                    NUM_DDIM_STEPS=None, blend_latents=False,
+                    blend_self_attention=False, save_path=None,
+                    save_self_attention=True, disk_store=False,
+                    target_weight=1) -> AttentionControlEdit:
     if (blend_words is None) or (blend_words == 'None'):
         latent_blend = None
         attention_blend = None
@@ -417,7 +419,8 @@ def make_controller(tokenizer, prompts: List[str], is_replace_controller: bool,
             use_inversion_attention=use_inversion_attention,
             attention_blend=attention_blend,
             save_self_attention=save_self_attention,
-            disk_store=disk_store)
+            disk_store=disk_store,
+            target_weight=target_weight)
     else:
         print('use refine controller')
         controller = AttentionRefine(
