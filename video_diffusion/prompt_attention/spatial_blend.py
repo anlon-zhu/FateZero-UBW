@@ -44,10 +44,19 @@ class SpatialBlender:
                 maps, (k * 2 + 1, k * 2 + 1),
                 (1, 1),
                 padding=(k, k))
+        # Resize the mask
         mask = F.interpolate(maps, size=(h, w))
+        # Normalize the mask
         mask = mask / mask.max(-2,
                                keepdims=True)[0].max(-1, keepdims=True)[0]
+        # Either A: Apply sigmoid function for a continuous mask
+        # steepness = 1.25  # TODO: pass configurable hyperparameter to yaml
+        # mask = 1 / (1 + torch.exp(-steepness * (
+        #     mask - self.th[1 - int(use_pool)])))
+
+        # or B: Binary mask
         mask = mask.gt(self.th[1-int(use_pool)])
+
         if self.prompt_choose == 'both':
             assert mask.shape[0] == 2, "If using both source and target prompt"
             mask = mask[:1] + mask
@@ -183,7 +192,7 @@ class SpatialBlender:
             for word in words_:
                 # debug me
                 ind = ptp_utils.get_word_inds(prompt, word, tokenizer)
-                alpha_layers[i, :, :, :, :, ind] = 2
+                alpha_layers[i, :, :, :, :, ind] = 1
         # self.alpha_layers.shape = torch.Size([2, 1, 1, 1, 1, 77]), 1 denotes the world to be replaced
         if substruct_words is not None:
             substruct_layers = torch.zeros(

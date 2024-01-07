@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=avtav-diffusion    # create a short name for your job
+#SBATCH --job-name=fatezero    # create a short name for your job
 #SBATCH --nodes=1                # node count
 #SBATCH --ntasks=1               # total number of tasks across all nodes
 #SBATCH --cpus-per-task=4      # cpu-cores per task (>1 if multi-threaded tasks)
@@ -16,4 +16,5 @@ module purge
 module load anaconda3/2023.3
 conda activate avtav
 
-accelerate launch test_fatezero.py --config="config/shape/highway.yaml"
+accelerate launch test_fatezero.py --config="config/attribute/fox_wolf_snow.yaml"
+accelerate launch test_fatezero.py --config="config/attribute/rabbit_straberry_leaves_flowers.yaml"

@@ -1,9 +1,12 @@
-pretrained_model_path: "./ckpt/lambo_200_f"
+# CUDA_VISIBLE_DEVICES=0 python test_fatezero.py --config config/attribute/bear_tiger_lion_leopard.yaml
+
+pretrained_model_path: "./ckpt/stable-diffusion-v1-4"
 
 dataset_config:
   path: "data/highway"
-  prompt: "a white van drives down a highway by a forest on a sunny day. dashcam video" # RENAME Inversion editing_prompts
+  prompt: "a white van drives down a highway by a forest on a sunny day. dashcam video"
   n_sample_frame: 8
+  # n_sample_frame: 22
   sampling_rate: 1
   stride: 80
   offset:
@@ -13,11 +16,11 @@ dataset_config:
     bottom: 0
 
 editing_config:
-  use_invertion_latents: true
-  use_inversion_attention: true
-
-  editing_prompts:
-    [
+  use_invertion_latents: True
+  use_inversion_attention: True
+  guidance_scale: 7.5
+  editing_prompts: [
+      # source prompt
       "a white van drives down a highway by a forest on a sunny day. dashcam video",
       "a Lamborghini car drives down a highway by a desert on a sunny day. dashcam video",
     ]
@@ -28,49 +31,43 @@ editing_config:
       # False: keep source attention, better for style
       is_replace_controller: False
 
-      # Semantic layout preserving. High steps, replace more cross attention to preserve semantic layout
+      # Semantic preserving and replacement Debug me
       cross_replace_steps:
         default_: 0.8
 
       # Source background structure preserving, in [0, 1].
       # e.g., =0.6 Replace the first 60% steps self-attention
-      self_replace_steps: 0.9
+      self_replace_steps: 0.6
 
       # Target structure-divergence hyperparames
       # If you change the shape of object better to use all three line, otherwise, no need.
       # Without following three lines, all self-attention will be replaced
-      # Usefull in shape editing
-      blend_words: [["van"], ["car"]]
+      blend_words: [["white"], ["van"]]
       blend_self_attention: True
-      # blend_latents: False   #  Directly copy the latents, performance not so good in our case
-
+      # blend_latents: False   # performance not so good in our case, need debug
+      blend_th: [2, 2]
       # preserve source structure of blend_words , [0, 1]
-      # blend_th-> [1.0, 1.0], mask -> 0, use inversion-time attention, the structure is similar to the input
-      # blend_th-> [0.0, 0.0], mask -> 1, use more edit self-attention, more generated shape, less source acttention
-      blend_th: [0.3, 0.3]
+      # default is blend_th: [2, 2]  # preserve all source self-attention
+      # blend_th : [0.0, 0.0], mask -> 1, use more att_replace, more generated attention, less source acttention
 
     1:
+      is_replace_controller: true
       cross_replace_steps:
-        default_: 0.5
-      self_replace_steps: 0.5
-
-      use_inversion_attention: True
-      is_replace_controller: True
-
-      blend_words: [["white", "van"], ["Lamborghini", "car"]] # for local edit. If it is not local yet - use only the source object: blend_word = ((('cat',), ("cat",))).
-      blend_self_attention: True
-      blend_th: [0.3, 0.3]
+        default_: 0.7
+      self_replace_steps: 0.7
 
   clip_length: "${..dataset_config.n_sample_frame}"
   sample_seeds: [0]
-  prompt2prompt_edit: True # Need study
 
-  # DDIM parameters
-  guidance_scale: 7.5
   num_inference_steps: 50
+  prompt2prompt_edit: True
 
 model_config:
   lora: 160
+  # temporal_downsample_time: 4
+  SparseCausalAttention_index: ["mid"]
+  least_sc_channel: 640
+  # least_sc_channel: 100000
 
 test_pipeline_config:
   target: video_diffusion.pipelines.p2p_ddim_spatial_temporal.P2pDDIMSpatioTemporalPipeline

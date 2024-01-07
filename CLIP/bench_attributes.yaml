@@ -1,0 +1,104 @@
+bear_tiger:
+  path: ../result/attribute/bear_tiger_lion_leopard/train_samples
+  source: a brown bear walking on the rock against a wall
+  target: a red tiger walking on the rock against a wall
+
+bear_leopard:
+  path: ../result/attribute/bear_tiger_lion_leopard/train_samples
+  source: a brown bear walking on the rock against a wall
+  target: a yellow leopard walking on the rock against a wall
+
+bus_gpu:
+  path: ../result/attribute/bus_gpu/train_samples
+  source: a white and blue bus on the road
+  target: a black and green GPU on the road
+
+cat_black:
+  path: ../result/attribute/cat_tiger_leopard_grass/train_samples
+  source: a black cat walking on the floor next to a wall
+  target: a black cat walking on the floor next to a wall
+
+cat_black_grass:
+  path: ../result/attribute/cat_tiger_leopard_grass/train_samples
+  source: a black cat walking on the floor next to a wall
+  target: a black cat walking on the grass next to a wall
+
+cat_leopard:
+  path: ../result/attribute/cat_tiger_leopard_grass/train_samples
+  source: a black cat walking on the floor next to a wall
+  target: a yellow cute leopard walking on the floor next to a wall
+
+cat_shiba:
+  path: ../result/attribute/cat_tiger_leopard_grass/train_samples
+  source: a black cat walking on the floor next to a wall
+  target: a yellow cute Shiba-Inu walking on the floor next to a wall
+
+cat_tiger:
+  path: ../result/attribute/cat_tiger_leopard_grass/train_samples
+  source: a black cat walking on the floor next to a wall
+  target: a red tiger walking on the floor next to a wall
+
+dog_corgi:
+  path: ../result/attribute/dog_robotic_corgi/train_samples
+  source: a gray dog sitting on the mat
+  target: a yellow corgi sitting on the mat
+
+dog_robot:
+  path: ../result/attribute/dog_robotic_corgi/train_samples
+  source: a gray dog sitting on the mat
+  target: a robotic dog sitting on the mat
+
+duck_rubber:
+  path: ../result/attribute/duck_rubber/train_samples
+  source: a white duck
+  target: a yellow rubber duck
+
+fox_snow:
+  path: ../result/attribute/fox_wolf_snow/train_samples
+  source: a white fox sitting in the grass
+  target: a white fox sitting in the snow
+
+fox_wolf:
+  path: ../result/attribute/fox_wolf_snow/train_samples
+  source: a white fox sitting in the grass
+  target: a grey wolf sitting in the grass
+
+rabbit_flowers:
+  path: ../result/attribute/rabbit_straberry_leaves_flowers/train_samples
+  source: a rabbit is eating strawberries
+  target: a white rabbit is eating flower
+
+rabbit_leaves:
+  path: ../result/attribute/rabbit_straberry_leaves_flowers/train_samples
+  source: a rabbit is eating strawberries
+  target: a white rabbit is eating leaves
+
+rabbit_oranges:
+  path: ../result/attribute/rabbit_straberry_leaves_flowers/train_samples
+  source: a rabbit is eating strawberries
+  target: a white rabbit is eating orange
+
+squ_mouse_peanut:
+  path: ../result/attribute/squ_carrot_robot_eggplant/train_samples
+  source: a squirrel is eating a carrot
+  target: a white mouse is eating a peanut
+
+squ_rabbit_eggplant:
+  path: ../result/attribute/squ_carrot_robot_eggplant/train_samples
+  source: a squirrel is eating a carrot
+  target: a rabbit is eating a eggplant
+
+squ_robot:
+  path: ../result/attribute/squ_carrot_robot_eggplant/train_samples
+  source: a squirrel is eating a carrot
+  target: a robot squirrel is eating a carrot
+
+squ_robot_mouse_screwdriver:
+  path: ../result/attribute/squ_carrot_robot_eggplant/train_samples
+  source: a squirrel is eating a carrot
+  target: a robot mouse is eating a screwdriver
+
+swan_swa:
+  path: ../result/attribute/swan_swa/train_samples
+  source: a black swan with a red beak swimming in a river near a wall and bushes
+  target: a Swarovski crystal swan with a red beak swimming in a river near a wall and bushes
